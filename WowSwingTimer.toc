@@ -1,0 +1,9 @@
+## Interface: 11503
+## Title: WoW Swing Timer
+## Notes: A swing timer addon for World of Warcraft Classic
+## Author: Gangstalker
+## Version: 1.0.0
+## SavedVariables: WowSwingTimerDB
+
+Core.lua
+UI.lua
