@@ -2,6 +2,10 @@
 
 -- Create the main UI frame
 function WowSwingTimer:CreateUI()
+    if self.frame then
+        return -- Don't create if already exists
+    end
+    
     -- Main frame
     self.frame = CreateFrame("Frame", "WowSwingTimerFrame", UIParent)
     self.frame:SetSize(WowSwingTimerDB.barWidth, WowSwingTimerDB.barHeight * 2 + 10)
@@ -64,39 +68,42 @@ function WowSwingTimer:CreateUI()
         self.mainHandText:SetTextColor(1, 1, 1, 1)
     end
     
-    -- Off hand swing bar (only if dual wielding)
-    if offHandSpeed > 0 then
-        self.offHandBar = CreateFrame("StatusBar", "WowSwingTimerOffHand", self.frame)
-        self.offHandBar:SetSize(WowSwingTimerDB.barWidth - 8, WowSwingTimerDB.barHeight)
-        self.offHandBar:SetPoint("TOP", self.mainHandBar, "BOTTOM", 0, -2)
-        self.offHandBar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
-        self.offHandBar:SetMinMaxValues(0, 100)
-        self.offHandBar:SetValue(0)
-        self.offHandBar:SetStatusBarColor(
-            WowSwingTimerDB.fillColor.r * 0.8,
-            WowSwingTimerDB.fillColor.g * 0.8,
-            WowSwingTimerDB.fillColor.b + 0.2,
-            WowSwingTimerDB.fillColor.a
-        )
-        
-        -- Off hand background
-        self.offHandBG = self.offHandBar:CreateTexture(nil, "BACKGROUND")
-        self.offHandBG:SetAllPoints(self.offHandBar)
-        self.offHandBG:SetTexture("Interface\\TargetingFrame\\UI-StatusBar")
-        self.offHandBG:SetVertexColor(
-            WowSwingTimerDB.backgroundColor.r,
-            WowSwingTimerDB.backgroundColor.g,
-            WowSwingTimerDB.backgroundColor.b,
-            WowSwingTimerDB.backgroundColor.a
-        )
-        
-        -- Off hand text
-        if WowSwingTimerDB.showText then
-            self.offHandText = self.offHandBar:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-            self.offHandText:SetPoint("CENTER", self.offHandBar, "CENTER")
-            self.offHandText:SetText("OH: Ready")
-            self.offHandText:SetTextColor(1, 1, 1, 1)
-        end
+    -- Off hand swing bar - create it even if not dual wielding for now
+    self.offHandBar = CreateFrame("StatusBar", "WowSwingTimerOffHand", self.frame)
+    self.offHandBar:SetSize(WowSwingTimerDB.barWidth - 8, WowSwingTimerDB.barHeight)
+    self.offHandBar:SetPoint("TOP", self.mainHandBar, "BOTTOM", 0, -2)
+    self.offHandBar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+    self.offHandBar:SetMinMaxValues(0, 100)
+    self.offHandBar:SetValue(0)
+    self.offHandBar:SetStatusBarColor(
+        WowSwingTimerDB.fillColor.r * 0.8,
+        WowSwingTimerDB.fillColor.g * 0.8,
+        WowSwingTimerDB.fillColor.b + 0.2,
+        WowSwingTimerDB.fillColor.a
+    )
+    
+    -- Off hand background
+    self.offHandBG = self.offHandBar:CreateTexture(nil, "BACKGROUND")
+    self.offHandBG:SetAllPoints(self.offHandBar)
+    self.offHandBG:SetTexture("Interface\\TargetingFrame\\UI-StatusBar")
+    self.offHandBG:SetVertexColor(
+        WowSwingTimerDB.backgroundColor.r,
+        WowSwingTimerDB.backgroundColor.g,
+        WowSwingTimerDB.backgroundColor.b,
+        WowSwingTimerDB.backgroundColor.a
+    )
+    
+    -- Off hand text
+    if WowSwingTimerDB.showText then
+        self.offHandText = self.offHandBar:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+        self.offHandText:SetPoint("CENTER", self.offHandBar, "CENTER")
+        self.offHandText:SetText("OH: Ready")
+        self.offHandText:SetTextColor(1, 1, 1, 1)
+    end
+    
+    -- Hide off-hand bar if not dual wielding
+    if offHandSpeed <= 0 then
+        self.offHandBar:Hide()
     end
     
     -- Show/hide based on settings

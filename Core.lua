@@ -48,7 +48,12 @@ function WowSwingTimer:Initialize()
     -- Create UI
     self:CreateUI()
     
-    print("WoW Swing Timer loaded successfully!")
+    -- Show UI if enabled
+    if WowSwingTimerDB.enabled then
+        self:ShowUI()
+    end
+    
+    print("WoW Swing Timer loaded successfully! Type /swingtimer for commands.")
 end
 
 -- Update weapon attack speeds
@@ -172,12 +177,29 @@ SlashCmdList["WOWSWINGTIMER"] = function(msg)
             print("WoW Swing Timer: Disabled")
             WowSwingTimer:HideUI()
         end
+    elseif command == "show" then
+        WowSwingTimer:ShowUI()
+        print("WoW Swing Timer: Showing frame")
+    elseif command == "hide" then
+        WowSwingTimer:HideUI()
+        print("WoW Swing Timer: Hiding frame")
     elseif command == "reset" then
         WowSwingTimer:ResetPosition()
         print("WoW Swing Timer: Position reset")
+    elseif command == "test" then
+        -- Test the swing timer with fake values
+        WowSwingTimer:ShowUI()
+        WowSwingTimer:StartMainHandSwing()
+        if offHandSpeed > 0 then
+            WowSwingTimer:StartOffHandSwing()
+        end
+        print("WoW Swing Timer: Test swing started")
     else
         print("WoW Swing Timer Commands:")
         print("/swingtimer toggle - Enable/disable the addon")
+        print("/swingtimer show - Show the frame")
+        print("/swingtimer hide - Hide the frame")
+        print("/swingtimer test - Test the swing timer")
         print("/swingtimer reset - Reset frame position")
     end
 end
